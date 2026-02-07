@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="ru" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nylium Wiki</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        background: 'var(--background)',
+                        foreground: 'var(--foreground)',
+                        card: 'var(--card)',
+                        'card-foreground': 'var(--card-foreground)',
+                        popover: 'var(--popover)',
+                        'popover-foreground': 'var(--popover-foreground)',
+                        primary: 'var(--primary)',
+                        'primary-foreground': 'var(--primary-foreground)',
+                        secondary: 'var(--secondary)',
+                        'secondary-foreground': 'var(--secondary-foreground)',
+                        muted: 'var(--muted)',
+                        'muted-foreground': 'var(--muted-foreground)',
+                        accent: 'var(--accent)',
+                        'accent-foreground': 'var(--accent-foreground)',
+                        destructive: 'var(--destructive)',
+                        'destructive-foreground': 'var(--destructive-foreground)',
+                        border: 'var(--border)',
+                        input: 'var(--input)',
+                        ring: 'var(--ring)',
+                        sidebar: 'var(--sidebar)',
+                        'sidebar-foreground': 'var(--sidebar-foreground)',
+                        'sidebar-primary': 'var(--sidebar-primary)',
+                        'sidebar-primary-foreground': 'var(--sidebar-primary-foreground)',
+                        'sidebar-accent': 'var(--sidebar-accent)',
+                        'sidebar-accent-foreground': 'var(--sidebar-accent-foreground)',
+                        'sidebar-border': 'var(--sidebar-border)',
+                    },
+                    borderRadius: {
+                        DEFAULT: 'var(--radius)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap');
+
+        :root {
+            --background: oklch(0.12 0.01 240);
+            --foreground: oklch(0.95 0 0);
+            --card: oklch(0.16 0.01 240);
+            --card-foreground: oklch(0.95 0 0);
+            --popover: oklch(0.14 0.01 240);
+            --popover-foreground: oklch(0.95 0 0);
+            --primary: oklch(0.72 0.19 155);
+            --primary-foreground: oklch(0.12 0.02 155);
+            --secondary: oklch(0.20 0.01 240);
+            --secondary-foreground: oklch(0.90 0 0);
+            --muted: oklch(0.22 0.01 240);
+            --muted-foreground: oklch(0.65 0 0);
+            --accent-foreground: oklch(0.95 0 0);
+            --destructive: oklch(0.55 0.22 25);
+            --destructive-foreground: oklch(0.95 0 0);
+            --border: oklch(0.25 0.01 240);
+            --input: oklch(0.20 0.01 240);
+            --ring: oklch(0.72 0.19 155);
+            
+            --sidebar: oklch(0.10 0.01 240);
+            --sidebar-foreground: oklch(0.95 0 0);
+            --sidebar-primary: oklch(0.72 0.19 155);
+            --sidebar-primary-foreground: oklch(0.12 0.02 155);
+            --sidebar-accent: oklch(0.18 0.01 240);
+            --sidebar-accent-foreground: oklch(0.95 0 0);
+            --sidebar-border: oklch(0.25 0.01 240);
+            
+            --radius: 0.5rem;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Inter', sans-serif;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--background); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }
+
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .text-balance { text-wrap: balance; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes modalIn {
+            from { opacity: 0; transform: scale(0.95) translate(-50%, -50%); }
+            to { opacity: 1; transform: scale(1) translate(-50%, -50%); }
+        }
+        
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-modal-in { animation: modalIn 0.3s ease-out forwards; transform-origin: center; }
+
+        .text-hex-edcb95 { color: #edcb95; }
+        .text-hex-1be480 { color: #1be480; }
+        
+        .mc-lore p { margin-bottom: 0.1rem; }
+        .pixelated {
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden">
+
+    <button id="mobile-menu-btn" class="lg:hidden fixed top-4 left-4 z-30 p-2.5 bg-card border border-border rounded-lg shadow-lg hover:bg-accent transition-colors">
+        <i data-lucide="menu" class="w-5 h-5 text-foreground"></i>
+    </button>
+
+    <div id="mobile-overlay" class="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity duration-300"></div>
+
+    <aside id="sidebar" class="fixed top-0 left-0 z-50 h-full w-72 bg-sidebar border-r border-sidebar-border flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0">
+        <div class="p-4 border-b border-sidebar-border">
+            <div class="flex items-center justify-between">
+                <button onclick="app.navigate('home')" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                    <div class="w-11 h-11 rounded-lg bg-primary/20 flex items-center justify-center overflow-hidden">
+                        <img src="/лого.png" onerror="this.src='https://placehold.co/100?text=Wiki'" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg text-sidebar-foreground">Nylium Wiki</h1>
+                    </div>
+                </button>
+                <button id="close-sidebar-btn" class="lg:hidden p-2 hover:bg-sidebar-accent rounded-lg transition-colors">
+                    <i data-lucide="x" class="w-5 h-5 text-muted-foreground"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="p-4">
+            <div class="relative">
+                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
+                <input
+                    id="search-input"
+                    type="text"
+                    placeholder="Поиск..."
+                    class="w-full pl-10 pr-4 py-2.5 bg-input border border-border rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all"
+                />
+                <kbd class="absolute right-3 top-1/2 -translate-y-1/2 px-1.5 py-0.5 text-[10px] font-mono bg-muted text-muted-foreground rounded">
+                    /
+                </kbd>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto px-3">
+            <ul class="space-y-1" id="sidebar-nav-list">
+                <li>
+                </li>
+                
+                <li id="nav-loading" class="px-3 py-4 text-center text-sm text-muted-foreground animate-pulse">
+                    Загрузка категорий...
+                </li>
+            </ul>
+        </nav>
+
+        <div class="p-4 border-t border-sidebar-border">
+            <div class="flex items-center gap-3 px-3 py-2">
+                <div class="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                    <i data-lucide="clock" class="w-4 h-4 text-muted-foreground"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs text-muted-foreground">
+                        Последнее изменение
+                    </p>
+                    <p class="text-sm font-medium text-sidebar-foreground truncate">
+                        07.02.2026, 4:00
+                    </p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 lg:pl-72 w-full h-full overflow-y-auto bg-background transition-all duration-300">
+        <div id="main-container" class="container mx-auto p-4 lg:p-10 max-w-7xl min-h-screen">
+             <div class="flex items-center justify-center h-full">
+                <div class="text-center animate-pulse">
+                    <i data-lucide="loader-2" class="w-8 h-8 text-primary mx-auto animate-spin mb-4"></i>
+                    <p class="text-muted-foreground">Загрузка данных...</p>
+                    <p class="text-xs text-muted-foreground mt-2 opacity-50">(Убедитесь, что запущен локальный сервер)</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="item-modal" class="fixed inset-0 z-[60] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-background/80 backdrop-blur-sm transition-opacity opacity-0" id="modal-backdrop" onclick="app.closeModal()"></div>
+
+        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl px-4 pointer-events-none">
+            <div id="modal-panel" class="w-full bg-card border border-border rounded-xl shadow-2xl p-6 opacity-0 scale-95 transition-all duration-300 pointer-events-auto max-h-[85vh] overflow-y-auto custom-scrollbar">
+                <button onclick="app.closeModal()" class="absolute right-6 top-6 p-2 rounded-lg hover:bg-accent transition-colors z-10 bg-background/50 backdrop-blur-sm border border-border">
+                    <i data-lucide="x" class="w-5 h-5 text-muted-foreground"></i>
+                </button>
+                
+                <div id="modal-content" class="space-y-6">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const app = {
+            data: {
+                items: {},
+                mechanics: {},
+                enchantments: {},
+                categories: {}
+            },
+            state: {
+                view: 'home',
+                category: null,
+                searchQuery: '',
+                currentGroup: null
+            },
+
+            groupDefinitions: [
+                {
+                    id: 'chess_set',
+                    name: 'Шахматный набор',
+                    keywords: ['chess'],
+                    icon: 'swords',
+                    description: 'Полный набор шахматных фигур всех цветов.',
+                    color: 'text-amber-400'
+                },
+                {
+                    id: 'checkers_set',
+                    name: 'Набор шашек',
+                    keywords: ['checker'],
+                    icon: 'circle-dot',
+                    description: 'Набор шашек для классической игры.',
+                    color: 'text-blue-400'
+                }
+            ],
+
+            async init() {
+                document.getElementById('mobile-menu-btn').addEventListener('click', this.toggleMobileMenu);
+                document.getElementById('close-sidebar-btn').addEventListener('click', this.toggleMobileMenu);
+                document.getElementById('mobile-overlay').addEventListener('click', this.toggleMobileMenu);
+                
+                document.getElementById('search-input').addEventListener('input', (e) => {
+                    this.state.searchQuery = e.target.value;
+                    this.render();
+                });
+
+                try {
+                    await this.loadData();
+                    this.renderSidebar();
+                    this.navigate('home');
+                } catch (error) {
+                    console.error("Ошибка загрузки данных:", error);
+                    document.getElementById('main-container').innerHTML = `
+                        <div class="text-center p-10 text-destructive">
+                            <h2 class="text-xl font-bold">Ошибка загрузки данных</h2>
+                            <p class="mt-2">Не удалось загрузить JSON файлы.</p>
+                            <p class="text-sm mt-4 text-muted-foreground">Если вы открыли этот файл напрямую (file://), браузер блокирует загрузку. Пожалуйста, используйте локальный веб-сервер (например, Live Server в VS Code).</p>
+                        </div>
+                    `;
+                }
+            },
+
+            async loadData() {
+                const [items, mechanics, enchantments, categories] = await Promise.all([
+                    fetch('items.json').then(r => r.json()),
+                    fetch('mechanics.json').then(r => r.json()),
+                    fetch('enchantments.json').then(r => r.json()),
+                    fetch('categories.json').then(r => r.json())
+                ]);
+
+                this.data.items = items;
+                this.data.mechanics = mechanics;
+                this.data.enchantments = enchantments;
+                this.data.categories = categories;
+            },
+
+            // renders
+            renderIcon(obj, defaultIcon = 'box', size = 'w-4 h-4') {
+                const pixelatedClass = (obj && obj.customModel) ? '' : 'pixelated';
+
+                if (obj && obj.customIcon && obj.customIcon.trim() !== "") {
+                    return `<img src="${obj.customIcon}" class="${size} object-contain ${pixelatedClass}" alt="icon">`;
+                }
+                
+                const modelPath = obj?.Pack?.model || obj?.Components?.item_model || obj?.Components?.parent_model;
+                
+                if (modelPath && typeof modelPath === 'string' && modelPath.includes('nylium:item/')) {
+                    const texturePath = '/assets/textures/' + modelPath.replace('nylium:', '') + '.png';
+                    return `<img src="${texturePath}" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" class="${size} object-contain ${pixelatedClass}" alt="icon"><i data-lucide="${defaultIcon}" class="${size} hidden text-muted-foreground"></i>`;
+                }
+
+                const iconName = (obj && obj.icon) ? obj.icon : defaultIcon;
+                return `<i data-lucide="${iconName}" class="${size}"></i>`;
+            },
+
+            renderSidebar() {
+                const navList = document.getElementById('sidebar-nav-list');
+                const loading = document.getElementById('nav-loading');
+                if (loading) loading.remove();
+
+                const createGroup = (id, groupKey, dataObj) => {
+                    const groupConfig = this.data.categories.groups[groupKey];
+                    const categories = Object.keys(dataObj);
+                    
+                    let html = `
+                        <li>
+                            <button onclick="app.toggleSubmenu('${id}-submenu', this)" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all text-sidebar-foreground hover:bg-sidebar-accent/50 group">
+                                <span class="flex items-center gap-3">
+                                    ${this.renderIcon(groupConfig, 'folder', 'w-5 h-5')}
+                                    ${groupConfig.name}
+                                </span>
+                                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform rotate-180 text-muted-foreground group-hover:text-foreground"></i>
+                            </button>
+                            <ul id="${id}-submenu" class="mt-1 ml-6 space-y-1 border-l border-sidebar-border pl-3">
+                    `;
+
+                    categories.forEach(catKey => {
+                        const catConfig = this.data.categories.subcategories[catKey] || { name: catKey, icon: 'circle' };
+                        html += `
+                            <li>
+                                <button onclick="app.navigate('${groupKey}', '${catKey}')" id="nav-${groupKey}-${catKey}" class="nav-link w-full text-left px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-all flex items-center gap-3">
+                                    ${this.renderIcon(catConfig, 'circle', 'w-7 h-7')}
+                                    ${catConfig.name}
+                                </button>
+                            </li>
+                        `;
+                    });
+
+                    html += `</ul></li>`;
+                    return html;
+                };
+
+                let menuHtml = '';
+                menuHtml += createGroup('items', 'items', this.data.items);
+                menuHtml += createGroup('mechanics', 'mechanics', this.data.mechanics);
+                menuHtml += createGroup('enchantments', 'enchantments', this.data.enchantments);
+
+                const homeLi = navList.firstElementChild;
+                navList.innerHTML = '';
+                navList.appendChild(homeLi);
+                navList.insertAdjacentHTML('beforeend', menuHtml);
+                
+                lucide.createIcons();
+            },
+
+            render() {
+                const container = document.getElementById('main-container');
+                container.innerHTML = ''; 
+
+                if (this.state.searchQuery && this.state.searchQuery.trim().length > 0) {
+                    this.renderGlobalSearch(container);
+                    lucide.createIcons();
+                    return;
+                }
+
+                if (this.state.view === 'home') {
+                    this.renderHome(container);
+                } else if (this.state.view === 'items') {
+                    this.renderItemsPage(container);
+                } else if (this.state.view === 'mechanics') {
+                    this.renderMechanicsPage(container);
+                } else if (this.state.view === 'enchantments') {
+                    this.renderEnchantmentsPage(container);
+                }
+
+                lucide.createIcons();
+            },
+
+            renderGlobalSearch(container) {
+                const query = this.state.searchQuery.toLowerCase();
+                let results = [];
+
+                const addItem = (item, type, category) => {
+                     if (
+                        item.name.toLowerCase().includes(query) || 
+                        (item.description && item.description.toLowerCase().includes(query))
+                    ) {
+                        results.push({ ...item, _type: type, _category: category });
+                    }
+                };
+
+                Object.entries(this.data.items).forEach(([cat, items]) => {
+                    items.forEach(item => addItem(item, 'item', cat));
+                });
+
+                Object.entries(this.data.mechanics).forEach(([cat, mechanics]) => {
+                    mechanics.forEach(mech => {
+                         if (
+                            mech.title.toLowerCase().includes(query) || 
+                            (mech.description && mech.description.toLowerCase().includes(query))
+                        ) {
+                            results.push({ ...mech, name: mech.title, _type: 'mechanic', _category: cat });
+                        }
+                    });
+                });
+
+                 Object.entries(this.data.enchantments).forEach(([cat, enchants]) => {
+                    enchants.forEach(ench => addItem(ench, 'enchantment', cat));
+                });
+
+                let content = this.renderHeader("Поиск", `Результаты по запросу "${this.state.searchQuery}"`, {icon: "search"}, false, true);
+
+                if (results.length > 0) {
+                     content += `<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">`;
+                     content += results.map(item => {
+                        if (item._type === 'item') {
+                            return this.renderItemCard(item, item._category);
+                        } else if (item._type === 'mechanic') {
+                            return this.renderMechanicCard(item);
+                        } else {
+                            return this.renderEnchantmentCard(item, item._category === 'curses');
+                        }
+                     }).join('');
+                     content += `</div>`;
+                } else {
+                     content += this.renderEmptyState({icon: 'search'}, 'Ничего не найдено');
+                }
+                
+                container.innerHTML = `<div class="animate-fade-in">${content}</div>`;
+            },
+
+            renderHome(container) {
+                const itemsCount = Object.values(this.data.items).reduce((acc, arr) => acc + arr.length, 0);
+                const mechCount = Object.values(this.data.mechanics).reduce((acc, arr) => acc + arr.length, 0);
+                const enchCount = Object.values(this.data.enchantments).reduce((acc, arr) => acc + arr.length, 0);
+
+                const itemCats = Object.keys(this.data.items).map(key => ({
+                    id: key, 
+                    ...this.data.categories.subcategories[key], 
+                    count: this.data.items[key].length 
+                }));
+                
+                const mechCats = Object.keys(this.data.mechanics).map(key => ({
+                    id: key, 
+                    ...this.data.categories.subcategories[key], 
+                    count: this.data.mechanics[key].length 
+                }));
+
+                const enchCats = Object.keys(this.data.enchantments).map(key => ({
+                    id: key, 
+                    ...this.data.categories.subcategories[key], 
+                    count: this.data.enchantments[key].length 
+                }));
+
+                const homeHtml = `
+                    <div class="space-y-16 animate-fade-in">
+                        <!-- Hero Section -->
+                        <section>
+                            <div class="relative overflow-hidden rounded-2xl border border-border p-8 lg:p-12 isolate">
+                                <div class="absolute inset-0 z-0">
+                                    <img src="/дс_баннер_твич.png" onerror="this.style.display='none'" alt="Background" class="w-full h-full object-cover opacity-40">
+                                    <div class="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent"></div>
+                                </div>
+                                
+                                <div class="relative z-10">
+                                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/20 backdrop-blur-md text-primary text-sm font-medium mb-4">
+                                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                        Новый сезон уже вышёл!    
+                                    </div>
+                                    <h1 class="text-4xl lg:text-5xl font-bold text-foreground tracking-tight text-balance">
+                                        Добро пожаловать в
+                                        <span class="text-primary"> Nylium Wiki</span>
+                                    </h1>
+                                    <p class="mt-4 text-lg text-muted-foreground max-w-2xl leading-relaxed">
+                                        Полная энциклопедия сервера. Изучайте новые предметы, механики и зачарования!
+                                    </p>
+                                    
+                                    <div class="mt-10 grid grid-cols-3 gap-4 lg:gap-8 backdrop-blur-md bg-card/40 p-6 rounded-xl border border-white/5 shadow-xl max-w-2xl">
+                                        <div>
+                                            <div class="text-2xl lg:text-3xl font-bold text-primary">${itemsCount}</div>
+                                            <div class="text-sm text-muted-foreground">Предметов</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-2xl lg:text-3xl font-bold text-primary">${enchCount}</div>
+                                            <div class="text-sm text-muted-foreground">Зачарований</div>
+                                        </div>
+                                        <div>
+                                            <div class="text-2xl lg:text-3xl font-bold text-primary">${mechCount}</div>
+                                            <div class="text-sm text-muted-foreground">Механик</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Version Patchnote Indicator -->
+                                <div class="absolute bottom-4 right-6 z-20 text-xs font-mono text-white/40 pointer-events-none select-none">
+                                    v1.0.14
+                                </div>
+                            </div>
+                        </section>
+
+                        ${this.renderHomeGrid('Предметы', 'Выберите категорию предметов', this.data.categories.groups['items'], itemCats, 'items')}
+                        ${this.renderHomeGrid('Механики', 'Механики сервера', this.data.categories.groups['mechanics'], mechCats, 'mechanics')}
+                        ${this.renderHomeGrid('Зачарования', 'Магические улучшения', this.data.categories.groups['enchantments'], enchCats, 'enchantments')}
+                        
+                        <footer class="mt-16 pt-8 border-t border-border">
+                            <div class="flex flex-col lg:flex-row items-center justify-between gap-6 py-8">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center overflow-hidden">
+                                        <img src="/лого.png" onerror="this.src='https://placehold.co/100?text=Logo'" class="w-full h-full object-cover">
+                                    </div>
+                                    <p class="font-semibold text-foreground">Nylium Wiki</p>
+                                </div>
+                                
+                                <div class="flex flex-wrap items-center justify-center gap-4">
+                                     <a href="https://discord.gg/kpJtpJNe23" class="group flex items-center gap-2 px-4 py-2 rounded-xl border border-border bg-card hover:border-[#5865F2]/50 hover:bg-[#5865F2]/10 transition-all duration-300 shadow-sm">
+                                        <div class="text-muted-foreground group-hover:text-[#5865F2] transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">  <path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612"/></svg>
+                                        </div>
+                                        <span class="font-medium text-sm text-muted-foreground group-hover:text-[#5865F2] transition-colors">Discord</span>
+                                    </a>
+
+                                    <a href="https://t.me/zipeleaf" class="group flex items-center gap-2 px-4 py-2 rounded-xl border border-border bg-card hover:border-[#26A5E4]/50 hover:bg-[#26A5E4]/10 transition-all duration-300 shadow-sm">
+                                        <div class="text-muted-foreground group-hover:text-[#26A5E4] transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8.287 5.906q-1.168.486-4.666 2.01-.567.225-.595.442c-.03.243.275.339.69.47l.175.055c.408.133.958.288 1.243.294q.39.01.868-.32 3.269-2.206 3.374-2.23c.05-.012.12-.026.166.016s.042.12.037.141c-.03.129-1.227 1.241-1.846 1.817-.193.18-.33.307-.358.336a8 8 0 0 1-.188.186c-.38.366-.664.64.015 1.088.327.216.589.393.85.571.284.194.568.387.936.629q.14.092.27.187c.331.236.63.448.997.414.214-.02.435-.22.547-.82.265-1.417.786-4.486.906-5.751a1.4 1.4 0 0 0-.013-.315.34.34 0 0 0-.114-.217.53.53 0 0 0-.31-.093c-.3.005-.763.166-2.984 1.09"/></svg>
+                                        </div>
+                                        <span class="font-medium text-sm text-muted-foreground group-hover:text-[#26A5E4] transition-colors">Telegram</span>
+                                    </a>
+
+                                    <a href="https://store.nylium.dev/" class="group flex items-center gap-2 px-4 py-2 rounded-xl border border-border bg-card hover:border-primary/50 hover:bg-primary/10 transition-all duration-300 shadow-sm">
+                                        <div class="text-muted-foreground group-hover:text-primary transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">  <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/></svg>
+                                        </div>
+                                        <span class="font-medium text-sm text-muted-foreground group-hover:text-primary transition-colors">Магазин</span>
+                                    </a>
+                                </div>
+
+                                <p class="text-sm text-muted-foreground lg:ml-auto order-last lg:order-none w-full lg:w-auto text-center lg:text-right">
+                                    © 2026 Nylium Wiki. Все права защищены.
+                                </p>
+                            </div>
+                        </footer>
+                    </div>
+                `;
+                container.innerHTML = homeHtml;
+            },
+
+            renderHomeGrid(title, description, groupConfig, items, type) {
+                const cards = items.map(cat => `
+                    <button onclick="app.navigate('${type}', '${cat.id}')" class="group p-4 rounded-xl border border-border bg-card hover:bg-accent hover:border-primary/50 transition-all duration-300 w-full text-left">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                                    ${this.renderIcon(cat, 'box', 'w-7 h-7')}
+                                </div>
+                                <div class="text-left">
+                                    <h3 class="font-medium text-card-foreground group-hover:text-primary transition-colors">
+                                        ${cat.name || cat.id}
+                                    </h3>
+                                    <p class="text-xs text-muted-foreground">${cat.count} шт.</p>
+                                </div>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all"></i>
+                        </div>
+                    </button>
+                `).join('');
+
+                return `
+                    <section class="mb-12">
+                        <div class="mb-6">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 rounded-lg bg-primary/10 text-primary">
+                                    ${this.renderIcon(groupConfig, 'box', 'w-6 h-6')}
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-foreground tracking-tight">${title}</h2>
+                                    <p class="mt-1 text-muted-foreground">${description}</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 h-px bg-gradient-to-r from-primary via-primary/20 to-transparent"></div>
+                        </div>
+                        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                            ${cards}
+                        </div>
+                    </section>
+                `;
+            },
+
+            processGroups(items) {
+                const groups = {};
+                const standaloneItems = [];
+
+                this.groupDefinitions.forEach(def => {
+                    groups[def.id] = { config: def, items: [] };
+                });
+
+                items.forEach(item => {
+                    let matched = false;
+                    for (const def of this.groupDefinitions) {
+                        const modelPath = item.Pack?.model || item.Components?.item_model || '';
+                        const itemId = item.id || '';
+                        
+                        const hasKeyword = def.keywords.some(kw => 
+                            modelPath.includes(kw) || itemId.includes(kw)
+                        );
+
+                        if (hasKeyword) {
+                            groups[def.id].items.push(item);
+                            matched = true;
+                            break;
+                        }
+                    }
+
+                    if (!matched) {
+                        standaloneItems.push(item);
+                    }
+                });
+
+                const result = [...standaloneItems];
+                
+                Object.values(groups).forEach(group => {
+                    if (group.items.length > 0) {
+                        result.push({
+                            id: `group_${group.config.id}`,
+                            name: group.config.name,
+                            description: group.config.description || `${group.items.length} предметов в наборе`,
+                            isGroup: true,
+                            groupData: group.items,
+                            icon: group.config.icon,
+                            customModel: group.items[0]?.customModel,
+                            customIcon: group.items[0]?.customIcon, 
+                            Pack: group.items[0]?.Pack, 
+                            Components: group.items[0]?.Components
+                        });
+                    }
+                });
+
+                return result;
+            },
+
+            renderItemsPage(container) {
+                const cat = this.state.category;
+                const rawItems = this.data.items[cat] || [];
+                
+                const processedItems = this.processGroups(rawItems);
+                
+                const filtered = this.filterData(processedItems);
+                
+                const catConfig = this.data.categories.subcategories[cat] || { name: cat };
+
+                let content = this.renderHeader(catConfig.name, `Все предметы категории "${catConfig.name}"`, catConfig, false, true);
+
+                if (filtered.length > 0) {
+                    content += `<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">`;
+                    content += filtered.map(item => {
+                        if (item.isGroup) {
+                            return this.renderGroupCard(item);
+                        }
+                        return this.renderItemCard(item, cat);
+                    }).join('');
+                    content += `</div>`;
+                } else {
+                    content += this.renderEmptyState(catConfig, 'Пока нет предметов');
+                }
+
+                container.innerHTML = `<div class="animate-fade-in">${content}</div>`;
+            },
+
+            renderGroupCard(groupItem) {
+                return `
+                    <button onclick="app.openGroupModal('${groupItem.id}')" class="group relative w-full text-left p-4 rounded-xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/50 flex flex-col h-full overflow-hidden">
+                         <!-- Subtle gradient background for distinction -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none"></div>
+                        
+                        <div class="relative flex gap-4 flex-1">
+                            <!-- Icon with a "stack" look -->
+                            <div class="relative flex-shrink-0">
+                                <!-- Layer effects to simulate a stack -->
+                                <div class="absolute -top-1 -right-1 w-14 h-14 bg-primary/10 rounded-lg border border-primary/10 transform rotate-6 scale-90 transition-transform group-hover:rotate-12"></div>
+                                <div class="relative w-14 h-14 rounded-lg bg-card border border-primary/20 flex items-center justify-center z-10 shadow-sm">
+                                    ${this.renderIcon(groupItem, 'layers', 'w-9 h-9 text-primary')}
+                                </div>
+                            </div>
+
+                            <div class="flex-1 min-w-0 z-10">
+                                <div class="flex items-start justify-between gap-2">
+                                    <h3 class="font-semibold text-card-foreground group-hover:text-primary transition-colors line-clamp-1">
+                                        ${groupItem.name}
+                                    </h3>
+                                    <span class="flex-shrink-0 px-1.5 py-0.5 rounded text-[10px] font-bold bg-primary/10 text-primary border border-primary/20 uppercase tracking-wider">
+                                        Набор
+                                    </span>
+                                </div>
+                                
+                                <div class="mt-1 text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                                    ${groupItem.description}
+                                </div>
+
+                                <div class="mt-3 flex items-center gap-2">
+                                    <div class="text-xs font-mono text-muted-foreground flex items-center gap-1.5 bg-muted/50 px-2 py-1 rounded">
+                                        <i data-lucide="package" class="w-3 h-3"></i>
+                                        ${groupItem.groupData.length} предметов
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+                `;
+            },
+
+            renderItemCard(item, cat) {
+                let tagsHtml = '';
+                if (item.glyph_tags && item.glyph_tags.length > 0) {
+                    tagsHtml = `<div class="mt-4 pt-3 border-t border-border flex gap-2 overflow-x-auto">`;
+                    item.glyph_tags.forEach(tag => {
+                        tagsHtml += `<img src="/assets/textures/glyphs/others/${tag}.png" onerror="this.style.display='none'" class="h-5 pixelated" style="width: auto;" title="${tag}">`;
+                    });
+                    tagsHtml += `</div>`;
+                }
+
+                let descriptionHtml = '';
+                if (item.lore && Array.isArray(item.lore) && item.lore.length > 0) {
+                     descriptionHtml = item.lore
+                        .map(l => {
+                            if (typeof l === 'string') return l;
+                            return l.text.replace(/^[◆\s]*(Информация|Заметка)\s*/i, '').trim();
+                        })
+                        .filter(t => t.length > 0)
+                        .join('<br>');
+                } else {
+                    descriptionHtml = item.description || '';
+                }
+
+                return `
+                    <button onclick="app.openItemModal('${cat}', '${item.id}')" class="group relative w-full text-left p-4 rounded-xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/50 flex flex-col h-full">
+                        <div class="relative flex gap-4 flex-1">
+                            <div class="flex-shrink-0 w-14 h-14 rounded-lg bg-muted flex items-center justify-center">
+                                ${this.renderIcon(item, 'box', 'w-10 h-10 text-primary')}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <h3 class="font-semibold text-card-foreground group-hover:text-primary transition-colors">
+                                    ${item.name}
+                                </h3>
+                                <div class="mt-2 text-sm text-muted-foreground line-clamp-2 leading-relaxed">${descriptionHtml}</div>
+                            </div>
+                        </div>
+                        ${tagsHtml}
+                    </button>
+                `;
+            },
+
+            renderMechanicsPage(container) {
+                const cat = this.state.category;
+                const items = this.data.mechanics[cat] || [];
+                const catConfig = this.data.categories.subcategories[cat] || { name: cat };
+                const isNew = cat === 'new';
+
+                let content = this.renderHeader(catConfig.name, isNew ? "Полностью новые механики сервера" : "Переработанные ванильные механики", catConfig, false, true);
+
+                if (items.length > 0) {
+                    content += `<div class="grid gap-4 sm:grid-cols-2">`;
+                    content += items.map(mech => this.renderMechanicCard(mech)).join('');
+                    content += `</div>`;
+                } else {
+                    content += this.renderEmptyState(catConfig, 'Пока нет механик');
+                }
+
+                container.innerHTML = `<div class="animate-fade-in">${content}</div>`;
+            },
+
+            renderMechanicCard(mech) {
+                 return `
+                    <button class="group w-full text-left p-6 rounded-xl border border-border bg-card hover:bg-accent/50 hover:border-primary/50 transition-all duration-300">
+                        <div class="flex items-start gap-4">
+                            <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                ${this.renderIcon(mech, 'cog', 'w-8 h-8')}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="font-semibold text-lg text-card-foreground group-hover:text-primary transition-colors">
+                                        ${mech.title}
+                                    </h3>
+                                </div>
+                                <p class="mt-2 text-sm text-muted-foreground leading-relaxed">${mech.description}</p>
+                                ${mech.features ? `
+                                    <ul class="mt-4 space-y-2">
+                                        ${mech.features.map(f => `
+                                            <li class="flex items-center gap-2 text-sm text-muted-foreground">
+                                                <div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                                                ${f}
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </button>
+                `;
+            },
+
+            renderEnchantmentsPage(container) {
+                const cat = this.state.category;
+                const items = this.data.enchantments[cat] || [];
+                const filtered = this.filterData(items);
+                const catConfig = this.data.categories.subcategories[cat] || { name: cat };
+                const isCurse = cat === 'curses';
+
+                let content = this.renderHeader(catConfig.name, isCurse ? "Негативные эффекты на снаряжении" : "Положительные эффекты для улучшения снаряжения", catConfig, isCurse, true);
+
+                if (filtered.length > 0) {
+                    content += `<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">`;
+                    content += filtered.map(ench => this.renderEnchantmentCard(ench, isCurse)).join('');
+                    content += `</div>`;
+                } else {
+                    content += this.renderEmptyState(catConfig, 'Пока нет зачарований');
+                }
+
+                container.innerHTML = `<div class="animate-fade-in">${content}</div>`;
+            },
+
+            renderEnchantmentCard(ench, isCurse) {
+                 return `
+                     <button class="group relative w-full text-left overflow-hidden rounded-xl border bg-card transition-all duration-300 hover:scale-[1.02] hover:border-primary/50 ${isCurse ? 'border-destructive/30' : 'border-border'}">
+                        <div class="relative p-5">
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2.5 rounded-lg ${isCurse ? 'bg-destructive/10' : 'bg-primary/10'}">
+                                        ${this.renderIcon(ench, isCurse ? 'skull' : 'sparkles', `w-6 h-6 ${isCurse ? 'text-destructive' : 'text-primary'}`)}
+                                    </div>
+                                    <div>
+                                        <h3 class="font-semibold text-card-foreground group-hover:text-primary transition-colors">
+                                            ${ench.name}
+                                        </h3>
+                                        <span class="text-xs font-medium ${isCurse ? 'text-destructive' : 'text-primary'}">${isCurse ? 'Проклятие' : 'Зачарование'}</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1 px-2 py-1 rounded-md bg-muted">
+                                    <span class="text-xs text-muted-foreground">Max:</span>
+                                    <span class="text-sm font-bold text-foreground">${ench.maxLevel}</span>
+                                </div>
+                            </div>
+
+                            <p class="mt-4 text-sm text-muted-foreground leading-relaxed">${ench.description}</p>
+
+                            <div class="mt-4 p-3 rounded-lg border ${isCurse ? 'bg-destructive/5 border-destructive/20' : 'bg-muted/50 border-border'}">
+                                <span class="text-xs font-medium ${isCurse ? 'text-destructive' : 'text-primary'}">Эффект:</span>
+                                <p class="mt-1 text-sm text-foreground">${ench.effect}</p>
+                            </div>
+
+                            <div class="mt-4 flex flex-wrap gap-2">
+                                ${ench.appliesTo.map(at => `
+                                    <span class="px-2 py-1 rounded-md bg-secondary text-xs text-secondary-foreground">${at}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </button>
+                `;
+            },
+
+            // header
+            renderHeader(title, description, iconConfig, isDestructive, showBack) {
+                return `
+                    <div class="mb-8">
+                         ${showBack ? `
+                            <button onclick="app.navigate('home')" class="mb-6 flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+                                <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                                Назад на главную
+                            </button>
+                        ` : ''}
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 rounded-lg ${isDestructive ? 'bg-destructive/10 text-destructive' : 'bg-primary/10 text-primary'}">
+                                ${this.renderIcon(iconConfig, 'box', 'w-8 h-8')}
+                            </div>
+                            <div>
+                                <h2 class="text-2xl font-bold text-foreground tracking-tight">${title}</h2>
+                                <p class="mt-1 text-muted-foreground">${description}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 h-px bg-gradient-to-r from-primary via-primary/20 to-transparent"></div>
+                    </div>
+                `;
+            },
+
+            renderEmptyState(iconConfig, title) {
+                return `
+                    <div class="text-center py-16">
+                        <div class="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                             ${this.renderIcon(iconConfig, 'box', 'w-10 h-10 text-muted-foreground')}
+                        </div>
+                        <h3 class="text-lg font-medium text-foreground mb-2">
+                            ${this.state.searchQuery ? "Ничего не найдено" : title}
+                        </h3>
+                        <p class="text-muted-foreground">
+                            ${this.state.searchQuery ? `По запросу "${this.state.searchQuery}" ничего не найдено` : "В этой категории пока пусто"}
+                        </p>
+                    </div>
+                `;
+            },
+
+            filterData(items) {
+                if (!this.state.searchQuery) return items;
+                const q = this.state.searchQuery.toLowerCase();
+                return items.filter(item => 
+                    item.name.toLowerCase().includes(q) || 
+                    (item.description && item.description.toLowerCase().includes(q))
+                );
+            },
+
+            toggleMobileMenu() {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('mobile-overlay');
+                const isClosed = sidebar.classList.contains('-translate-x-full');
+                
+                if (isClosed) {
+                    sidebar.classList.remove('-translate-x-full');
+                    sidebar.classList.add('translate-x-0');
+                    overlay.classList.remove('hidden');
+                } else {
+                    sidebar.classList.add('-translate-x-full');
+                    sidebar.classList.remove('translate-x-0');
+                    overlay.classList.add('hidden');
+                }
+            },
+
+            toggleSubmenu(id, btn) {
+                const submenu = document.getElementById(id);
+                const icon = btn.querySelector('[data-lucide="chevron-down"]');
+                if (submenu.classList.contains('hidden')) {
+                    submenu.classList.remove('hidden');
+                    icon.classList.add('rotate-180');
+                } else {
+                    submenu.classList.add('hidden');
+                    icon.classList.remove('rotate-180');
+                }
+            },
+
+            navigate(view, category = null) {
+                this.state.view = view;
+                this.state.category = category;
+                this.state.searchQuery = ''; 
+                document.getElementById('search-input').value = '';
+                
+                document.querySelectorAll('.nav-link, #nav-home').forEach(el => {
+                    el.classList.remove('bg-sidebar-accent', 'text-sidebar-primary');
+                    el.classList.add('text-muted-foreground');
+                    if (el.id === 'nav-home') el.classList.add('text-sidebar-foreground');
+                });
+
+                let activeId = '';
+                if (view === 'home') activeId = 'nav-home';
+                else if (category) activeId = `nav-${view}-${category}`;
+
+                const activeEl = document.getElementById(activeId);
+                if (activeEl) {
+                    activeEl.classList.add('bg-sidebar-accent', 'text-sidebar-primary');
+                    activeEl.classList.remove('text-muted-foreground', 'text-sidebar-foreground');
+                }
+
+                if (window.innerWidth < 1024 && !document.getElementById('sidebar').classList.contains('-translate-x-full')) {
+                    this.toggleMobileMenu();
+                }
+
+                this.render();
+                window.scrollTo(0, 0);
+            },
+
+            // modal & group
+            openGroupModal(groupId) {
+                const cat = this.state.category;
+                const rawItems = this.data.items[cat] || [];
+                const groups = this.processGroups(rawItems);
+                const group = groups.find(g => g.id === groupId);
+
+                if (!group) return;
+
+                const content = document.getElementById('modal-content');
+                
+                // group modal
+                let html = `
+                    <div class="flex items-center gap-5 border-b border-border pb-6">
+                        <div class="w-20 h-20 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                            ${this.renderIcon(group, 'layers', 'w-14 h-14 text-primary')}
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs uppercase font-bold tracking-wider">Набор</span>
+                            </div>
+                            <h2 class="text-3xl font-bold text-foreground">${group.name}</h2>
+                            <p class="text-muted-foreground mt-1">${group.description}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pt-2">
+                `;
+
+                html += group.groupData.map(item => `
+                    <button onclick="app.openItemModal('${cat}', '${item.id}')" class="flex flex-col items-center text-center gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:bg-muted/50 hover:border-primary/30 transition-all group/item h-full">
+                         <div class="w-16 h-16 rounded-xl bg-background shadow-sm flex items-center justify-center group-hover/item:scale-105 transition-transform border border-border/50">
+                             ${this.renderIcon(item, 'box', 'w-12 h-12')}
+                         </div>
+                         <div class="w-full">
+                             <div class="font-medium text-sm text-foreground leading-tight line-clamp-2">${item.name}</div>
+                             <div class="text-[10px] text-muted-foreground mt-1 opacity-70 group-hover/item:text-primary group-hover/item:opacity-100 transition-colors">Показать</div>
+                         </div>
+                    </button>
+                `).join('');
+
+                html += `</div>`;
+                
+                content.innerHTML = html;
+                this.showModal();
+            },
+
+            openItemModal(category, itemId) {
+                const items = this.data.items[category];
+                let item = items.find(i => i.id === itemId);
+                
+                if (!item) {
+                    const groups = this.processGroups(items);
+                    for (const g of groups) {
+                        if (g.isGroup) {
+                            const found = g.groupData.find(i => i.id === itemId);
+                            if (found) {
+                                item = found;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                if (!item) return;
+
+                const content = document.getElementById('modal-content');
+                content.innerHTML = this.renderModalContent(item);
+                this.showModal();
+            },
+
+            showModal() {
+                const modal = document.getElementById('item-modal');
+                const backdrop = document.getElementById('modal-backdrop');
+                const panel = document.getElementById('modal-panel');
+
+                modal.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    backdrop.classList.remove('opacity-0');
+                    panel.classList.remove('opacity-0', 'scale-95');
+                    panel.classList.add('opacity-100', 'scale-100');
+                });
+                lucide.createIcons();
+            },
+
+            closeModal() {
+                const modal = document.getElementById('item-modal');
+                const backdrop = document.getElementById('modal-backdrop');
+                const panel = document.getElementById('modal-panel');
+
+                backdrop.classList.remove('opacity-100');
+                backdrop.classList.add('opacity-0');
+                panel.classList.remove('opacity-100', 'scale-100');
+                panel.classList.add('opacity-0', 'scale-95');
+
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            },
+
+            renderModalContent(item) {
+                let loreHtml = '';
+                if (item.lore) {
+                    loreHtml = `
+                        <div class="space-y-1 font-mono text-sm bg-black/20 p-4 rounded-lg border border-white/5">
+                            ${item.lore.map(line => {
+                                let style = `color: ${line.color === 'gray' ? '#a1a1aa' : (line.color === 'dark_gray' ? '#52525b' : line.color)}`;
+                                let textClass = line.italic ? 'italic' : '';
+                                return `<div class="${textClass}" style="${style}">${line.text}</div>`;
+                            }).join('')}
+                        </div>
+                    `;
+                }
+
+                let mechanicsHtml = '';
+                if (item.mechanics) {
+                    mechanicsHtml = `
+                        <div>
+                            <h4 class="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                                <i data-lucide="cog" class="w-4 h-4 text-primary"></i>
+                                Механики
+                            </h4>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                ${Object.entries(item.mechanics).map(([key, value]) => `
+                                    <div class="bg-muted/50 p-2.5 rounded-lg border border-border">
+                                        <div class="text-xs text-muted-foreground mb-1">${key}</div>
+                                        <div class="text-sm font-medium text-foreground">${value}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                let mediaHtml = '';
+                if (item.image) {
+                    mediaHtml = `
+                        <div class="pt-4 border-t border-border mt-2">
+                            <h4 class="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                                <i data-lucide="image" class="w-4 h-4 text-primary"></i>
+                                Галерея
+                            </h4>
+                            <div class="w-full aspect-video rounded-lg bg-black/20 border border-border flex items-center justify-center relative overflow-hidden group">
+                                <img src="${item.image}" class="w-full h-full object-cover" alt="${item.name}">
+                            </div>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="flex flex-col gap-6">
+                        <div class="flex items-center gap-5"> 
+                            <div class="w-20 h-20 rounded-xl bg-gradient-to-br from-muted to-muted/50 border border-white/10 flex items-center justify-center flex-shrink-0 shadow-xl">
+                                ${this.renderIcon(item, 'box', 'w-14 h-14 text-primary drop-shadow-[0_0_15px_rgba(var(--primary),0.5)]')}
+                            </div>
+                            <div class="flex-1 min-w-0"> 
+                                <div class="flex items-center justify-between">
+                                    <h2 class="text-2xl font-bold text-foreground">${item.name}</h2>
+                                </div>
+                            </div>
+                        </div>
+                        ${loreHtml ? `<div><h4 class="text-sm font-semibold text-foreground mb-3 flex items-center gap-2"><i data-lucide="scroll-text" class="w-4 h-4 text-primary"></i>Описание</h4>${loreHtml}</div>` : ''}
+                        ${mechanicsHtml}
+                        ${mediaHtml}
+                    </div>
+                `;
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+    </script>
+</body>
+</html>
