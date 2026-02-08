@@ -7,17 +7,17 @@ Project/
 │  ├  models/               .json модели
 │  ├  textures/             .png текстуры
 │  └  renders/              Автоматически сгенерированные иконки
-├  nexo-items/              Папка для конфигов NexoItems
-│  ├  items.yml             Основной конфиг предметов
+├  nexo-items/              Папка для конфигов Nexo
+│  ├  items.yml             Ваши конфиги Nexo (например: items.yml , blocks.yml)
 │  └  food.yml
 ├  nexo-items.py            Скрипт парсинга
 ├  renderer.py              Скрипт рендеринга
 ├  start_wiki.py            Главный скрипт запуска
-├  wiki-copy.html           Сгенерированная страница вики
-├  mechanics.json           Механики (опционально)
-├  enchantments.json        Зачарования (опционально)
+├  wiki-copy.html           Страница wiki
+├  mechanics.json           Вкладка механик на сайте (Опционально)
+├  enchantments.json        Вкладка зачарований на сайте (Опционально)
 ├  items.json               Список предметов (генерируется)
-└  categories.json          Настройка категорий (опционально)
+└  categories.json          Ручная настройка категорий (Опционально)
 ```
 ## ▼ Установка и Запуск
 
